@@ -1,10 +1,10 @@
-from app.application.ports.output.subsequence_counter_port import SubsequenceCounterPort
-from app.domain.value_objects.subsequence_query import SubsequenceQuery
+from app.application.ports.output.event_sequence_counter_port import EventSequenceCounterPort
+from app.domain.value_objects.event_sequence_query import EventSequenceQuery
 
 
-class SubsequenceCounter(SubsequenceCounterPort):
+class EventSequenceCounter(EventSequenceCounterPort):
 
-    def count(self, query: SubsequenceQuery) -> int:
+    def count(self, query: EventSequenceQuery) -> int:
         """Return the number of distinct subsequences of query.target in query.source."""
         source, target = query.source, query.target
 
@@ -13,9 +13,9 @@ class SubsequenceCounter(SubsequenceCounterPort):
 
         dp = [1] + [0] * len(target)
 
-        for c in source:
+        for event in source:
             for j in range(len(target), 0, -1):
-                if c == target[j - 1]:
+                if event == target[j - 1]:
                     dp[j] += dp[j - 1]
 
         return dp[-1]
