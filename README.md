@@ -1,61 +1,61 @@
 # Distinct Subsequences Exercise
 
-Solución al problema **Distinct Subsequences** implementada con buenas prácticas de código: **Arquitectura Hexagonal** (Ports & Adapters), **Dynamic Programming** y una API REST con FastAPI.
+Solution to the **Distinct Subsequences** problem implemented with clean code principles: **Hexagonal Architecture** (Ports & Adapters), **Dynamic Programming**, and a REST API with FastAPI.
 
 ---
 
-## Problema
+## Problem
 
-Dado un string `source` y un string `target`, contar cuántas subsecuencias distintas de `source` son iguales a `target`.
+Given a string `source` and a string `target`, count how many distinct subsequences of `source` equal `target`.
 
-**Ejemplo:**
+**Example:**
 - `source = "rabbbit"`, `target = "rabbit"` → **3**
 
-El mismo problema aplica a secuencias de eventos (listas de strings).
+The same problem applies to event sequences (lists of strings).
 
 ---
 
-## Requisitos
+## Requirements
 
 - Python 3.10+
 - pip
 
 ---
 
-## Instalación
+## Installation
 
 ```bash
-# Clonar el repositorio
+# Clone the repository
 git clone <repo-url>
 cd Distinct-Subsequences-Exercise
 
-# Crear y activar entorno virtual
+# Create and activate virtual environment
 python -m venv .venv
-source .venv/bin/activate  # En Windows: .venv\Scripts\activate
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-# Instalar dependencias
+# Install dependencies
 pip install -r requirements.txt
 ```
 
 ---
 
-## Correr el servidor
+## Running the server
 
 ```bash
 python -m src.app.main
 ```
 
-El servidor arranca en `http://localhost:8000`.
+The server starts at `http://localhost:8000`.
 
-La documentación interactiva de la API (Swagger UI) queda disponible en `http://localhost:8000/docs`.
+Interactive API documentation (Swagger UI) is available at `http://localhost:8000/docs`.
 
 ---
 
-## Endpoints de la API
+## API Endpoints
 
 ### `POST /subsequences`
 
-Cuenta subsecuencias distintas en strings de texto.
+Counts distinct subsequences in text strings.
 
 **Request:**
 ```json
@@ -72,15 +72,15 @@ Cuenta subsecuencias distintas en strings de texto.
 }
 ```
 
-**Validaciones:**
-- `source` y `target` deben contener solo letras inglesas (`[a-zA-Z]`).
-- Longitud entre 1 y 1000 caracteres.
+**Validations:**
+- `source` and `target` must contain only English letters (`[a-zA-Z]`).
+- Length between 1 and 1000 characters.
 
 ---
 
 ### `POST /event-subsequences`
 
-Cuenta subsecuencias distintas en secuencias de eventos (listas de strings).
+Counts distinct subsequences in event sequences (lists of strings).
 
 **Request:**
 ```json
@@ -97,70 +97,70 @@ Cuenta subsecuencias distintas en secuencias de eventos (listas de strings).
 }
 ```
 
-**Validaciones:**
-- Los tokens deben contener solo caracteres `[A-Za-z0-9_-]`.
-- Longitud de la lista entre 1 y 1000 elementos.
+**Validations:**
+- Tokens must contain only `[A-Za-z0-9_-]` characters.
+- List length between 1 and 1000 elements.
 
 ---
 
-## Correr los tests
+## Running the tests
 
 ```bash
-# Todos los tests
+# All tests
 python -m pytest tests/
 
-# Un archivo específico
+# A specific file
 python -m pytest tests/test_subsequence_counter.py
 
-# Un test por nombre
+# A test by name
 python -m pytest tests/test_subsequence_counter.py::test_function_name
 
-# Con detalle
+# With verbose output
 python -m pytest tests/ -v
 ```
 
 ---
 
-## Arquitectura
+## Architecture
 
-El proyecto sigue **Arquitectura Hexagonal** (Ports & Adapters):
+The project follows **Hexagonal Architecture** (Ports & Adapters):
 
 ```
 src/app/
 ├── domain/
 │   ├── services/
-│   │   ├── subsequence_counter.py       # Algoritmo DP para strings
-│   │   └── event_sequence_counter.py    # Algoritmo DP para eventos
+│   │   ├── subsequence_counter.py       # DP algorithm for strings
+│   │   └── event_sequence_counter.py    # DP algorithm for events
 │   └── value_objects/
-│       ├── subsequence_query.py         # Value object con validación
-│       └── event_sequence_query.py      # Value object con validación
+│       ├── subsequence_query.py         # Value object with validation
+│       └── event_sequence_query.py      # Value object with validation
 ├── application/
 │   ├── ports/
-│   │   ├── input/                       # Interfaces de entrada (use cases)
-│   │   └── output/                      # Interfaces de salida (repositorios/servicios)
+│   │   ├── input/                       # Input interfaces (use cases)
+│   │   └── output/                      # Output interfaces (repositories/services)
 │   └── use_cases/
-│       ├── count_subsequences.py        # Orquesta el dominio
+│       ├── count_subsequences.py        # Orchestrates the domain
 │       └── count_event_subsequences.py
 ├── infrastructure/
 │   ├── adapters/
 │   │   └── input/
-│   │       └── rest_api.py              # Adaptador REST (FastAPI)
-│   └── app_factory.py                   # Wiring de dependencias
-└── main.py                              # Punto de entrada
+│   │       └── rest_api.py              # REST adapter (FastAPI)
+│   └── app_factory.py                   # Dependency wiring
+└── main.py                              # Entry point
 ```
 
-**Flujo de dependencias:**
+**Dependency flow:**
 
 ```
 rest_api.py → UseCase (port) ← use_cases.py → domain/services/
 ```
 
-- **Domain:** lógica pura, sin dependencias externas.
-- **Application:** define los puertos (interfaces) y orquesta el dominio.
-- **Infrastructure:** adaptadores al mundo exterior (HTTP, CLI, etc.).
+- **Domain:** pure business logic, no external dependencies.
+- **Application:** defines ports (interfaces) and orchestrates the domain.
+- **Infrastructure:** adapters to the outside world (HTTP, CLI, etc.).
 
 ---
 
-## Algoritmo
+## Algorithm
 
-Se usa **programación dinámica con un array 1D** de complejidad O(n × m) en tiempo y O(m) en espacio, donde `n = len(source)` y `m = len(target)`.
+Uses **dynamic programming with a 1D array**, O(n × m) time complexity and O(m) space complexity, where `n = len(source)` and `m = len(target)`.
