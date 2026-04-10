@@ -1,17 +1,12 @@
-from app.domain.ports.subsequence_counter_port import SubsequenceCounterPort
+from app.application.ports.output.subsequence_counter_port import SubsequenceCounterPort
+from app.domain.value_objects.subsequence_query import SubsequenceQuery
 
 
 class SubsequenceCounter(SubsequenceCounterPort):
 
-
-    def count(self, source: str, target: str) -> int:
-        """Return the number of distinct subsequences of target in source.
-
-        Raises:
-            ValueError: If source or target is None.
-        """
-        if source is None or target is None:
-            raise ValueError("source and target must not be None")
+    def count(self, query: SubsequenceQuery) -> int:
+        """Return the number of distinct subsequences of query.target in query.source."""
+        source, target = query.source, query.target
 
         if len(target) > len(source):
             return 0
