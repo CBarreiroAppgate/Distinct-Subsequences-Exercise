@@ -1,3 +1,4 @@
+import pytest
 from app.domain.services.subsequence_counter import SubsequenceCounter
 
 
@@ -34,3 +35,15 @@ class TestSubsequenceCounter:
 
     def test_repeated_pattern(self):
         assert self.counter.count("aabb", "ab") == 4
+
+    def test_raises_on_none_source(self):
+        with pytest.raises(ValueError):
+            self.counter.count(None, "rabbit")
+
+    def test_raises_on_none_target(self):
+        with pytest.raises(ValueError):
+            self.counter.count("rabbbit", None)
+
+    def test_raises_on_both_none(self):
+        with pytest.raises(ValueError):
+            self.counter.count(None, None)
